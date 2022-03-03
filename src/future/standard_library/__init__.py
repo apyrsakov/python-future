@@ -62,7 +62,7 @@ from __future__ import absolute_import, division, print_function
 
 import sys
 import logging
-import imp
+import importlib
 import contextlib
 import types
 import copy
@@ -297,8 +297,8 @@ class RenameImport(object):
                 flog.debug('What to do here?')
 
         name = bits[0]
-        module_info = imp.find_module(name, path)
-        return imp.load_module(name, *module_info)
+        module_info = importlib.find_loader(name, path)
+        return importlib.import_module(name)
 
 
 class hooks(object):
@@ -671,8 +671,6 @@ def import_(module_name, backport=False):
     # Python 2.6 doesn't have importlib in the stdlib, so it requires
     # the backported ``importlib`` package from PyPI as a dependency to use
     # this function:
-    import importlib
-
     if PY3:
         return __import__(module_name)
     else:
